@@ -1,0 +1,37 @@
+{
+  "name": "zahra",
+  "version": "1.0.0",
+  "description": "A clean modern Discord Moderation bot for various systems.",
+  "keywords": [
+    "Zahra"
+  ],
+  "homepage": "https://github.com/doughmination/Zahra#readme",
+  "bugs": {
+    "url": "https://github.com/doughmination/Zahra/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/doughmination/Zahra.git"
+  },
+  "license": "SEE LICENCE IN LICENCE.md",
+  "author": "Doughmination System",
+  "type": "commonjs",
+  "main": "dist/index.js",
+    "scripts": {
+        "test": "npm run build && node dist/index.js",
+        "build": "tsc",
+        "start": "node dist/index.js",
+        "dev": "nodemon --watch src --ext ts --exec \"npm run build && npm run start\""
+    },
+    "devDependencies": {
+        "@types/node": "^25.0.3",
+        "typescript": "^5.9.3"
+    },
+    "dependencies": {
+        "@dotenvx/dotenvx": "^1.51.4",
+        "chalk": "^5.6.2",
+        "discord.js": "^14.25.1",
+        "node-fetch": "^3.3.2",
+        "nodemon": "^3.1.11"
+    }
+}
