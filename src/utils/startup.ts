@@ -86,7 +86,6 @@ export default async function startup() {
 
     await sleep(5_000);
 
-    await client.destroy();
     process.exit(0);
   }
 
