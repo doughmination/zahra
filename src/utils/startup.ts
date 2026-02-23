@@ -50,10 +50,13 @@ export default async function startup() {
   // Boot animation
   const bootStates = ["Booting.", "Booting..", "Booting...", "Booting...."];
   let bootIndex = 0;
+  const isTTY = !!process.stdout.isTTY;
   const bootAnimation = setInterval(() => {
-    process.stdout.clearLine(0);
-    process.stdout.cursorTo(0);
-    process.stdout.write(chalk.bgBlack.greenBright(`🚀 ${bootStates[bootIndex]}`));
+    if (isTTY) {
+      process.stdout.clearLine(0);
+      process.stdout.cursorTo(0);
+      process.stdout.write(chalk.bgBlack.greenBright(`🚀 ${bootStates[bootIndex]}`));
+    }
     bootIndex = (bootIndex + 1) % bootStates.length;
   }, 400);
 
@@ -83,8 +86,10 @@ export default async function startup() {
   // ── Ready ──────────────────────────────────────────────────────────────────
   client.once(Events.ClientReady, async () => {
     clearInterval(bootAnimation);
-    process.stdout.clearLine(0);
-    process.stdout.cursorTo(0);
+    if (isTTY) {
+      process.stdout.clearLine(0);
+      process.stdout.cursorTo(0);
+    }
 
     const user = client.user;
     if (!user) return;
