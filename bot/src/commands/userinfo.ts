@@ -10,6 +10,23 @@ import {
   GuildMember,
 } from "discord.js";
 import type { Command } from "../utils/types";
+import { publicDecrypt } from "node:crypto";
+
+// ── Bot ownership and developer roster ────────────────────────────────────────────────────────────────
+
+/** The bot owner's Discord ID, Displayed with a crown badge */
+const BOT_OWNER_ID = "1125844710511104030";
+
+/**
+ * Discord IDs of the bot's developers.
+ * The Owner ID is also included here.
+ */
+const BOT_DEVELOPER_IDS: string[] = [
+  "1125844710511104030", // Owner
+  "1474568910736199825",
+]
+
+// ── Command ───────────────────────────────────────────────────────────────────────────────────────────
 
 export const command: Command = {
   data: new SlashCommandBuilder()
@@ -52,6 +69,7 @@ export const command: Command = {
           .join(" ") + (roles.size > 20 ? ` … (+${roles.size - 20} more)` : "")
       : "None";
 
+    // Discord's badges
     const flags      = targetUser.flags?.toArray() ?? [];
     const badgeMap: Record<string, string> = {
       Staff:                      "👨‍💼 Discord Staff",
@@ -67,7 +85,22 @@ export const command: Command = {
       ActiveDeveloper:            "🔧 Active Developer",
       CertifiedModerator:         "🛡️ Discord Certified Moderator",
     };
-    const badges = flags.map((f) => badgeMap[f] ?? f).join("\n") || "None";
+    const discordBadges = flags.map((f) => badgeMap[f] ?? f).join("\n") || "None";
+
+    // ── Zahra badges ────────────────────────────────────────────
+    const zahraBadges: string[] = [];
+
+    if (targetUser.id === BOT_OWNER_ID) {
+      zahraBadges.push("👑 Zahra Bot Owner");
+    }
+
+    if (BOT_DEVELOPER_IDS.includes(targetUser.id)) {
+      zahraBadges.push("🛠️ Zahra Developer")
+    }
+
+    // Combine all badges
+    const allBadges = [...zahraBadges, ...discordBadges];
+    const badges = allBadges.join("\n") || "None";
 
     const embed = new EmbedBuilder()
       .setColor(member?.displayHexColor !== "#000000" ? member?.displayHexColor ?? 0x5865f2 : 0x5865f2)
