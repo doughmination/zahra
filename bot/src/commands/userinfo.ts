@@ -22,7 +22,6 @@ export const command: Command = {
         .setDescription("The user to look up. Defaults to yourself.")
         .setRequired(false)
     ),
-
   async execute(interaction: ChatInputCommandInteraction, _client: Client) {
     await interaction.deferReply();
 
@@ -53,7 +52,7 @@ export const command: Command = {
           .join(" ") + (roles.size > 20 ? ` … (+${roles.size - 20} more)` : "")
       : "None";
 
-    const badges = resolveBadges(targetUser);
+    const badges = resolveBadges(targetUser, member);
 
     const embed = new EmbedBuilder()
       .setColor(member?.displayHexColor !== "#000000" ? member?.displayHexColor ?? 0x5865f2 : 0x5865f2)
