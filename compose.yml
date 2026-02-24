@@ -12,9 +12,9 @@ services:
       - NODE_ENV=production
       - FORCE_COLOR=1
     volumes:
-      - ./.logs:/app/.logs
-      - ./.env:/app/.env:ro
-      - ./.env.keys:/app/.env.keys:ro
+      - ./bot/.logs:/app/.logs
+      - ./bot/.env:/app/.env:ro
+      - ./bot/.env.keys:/app/.env.keys:ro
     networks:
       - bot-network
     user: "1001:1001"
