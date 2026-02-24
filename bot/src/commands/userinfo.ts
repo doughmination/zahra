@@ -12,7 +12,7 @@ import {
 import type { Command } from "../utils/types";
 import { publicDecrypt } from "node:crypto";
 
-// ── Bot ownership and developer roster ────────────────────────────────────────────────────────────────
+// ── Custom Badges ────────────────────────────────────────────────────────────────
 
 /** The bot owner's Discord ID, Displayed with a crown badge */
 const BOT_OWNER_ID = "1125844710511104030";
@@ -42,6 +42,23 @@ const GIRLS_BOTS: string[] = [
   "1449095867372933181", // BanSync
   "1456858864551985378", // RaidGuardian
   "1442680671880351795", // Booster Bot
+]
+
+const GIRLS_MODS: string[] = [
+  "855122091791089664",
+  "908055723659898902",
+  "1019663199404040194",
+  "1269452254167957670",
+  "1168620183494070465",
+  "1195135576693801051",
+  "626499091903283230",
+  "751168915417071749",
+  "527709099186716673",
+  "1255312849442570260",
+  "810257561596461166",
+  "652597508027187240",
+  "1275507540578275400",
+  "1372852461521342476"
 ]
 
 // ── Command ───────────────────────────────────────────────────────────────────────────────────────────
@@ -124,7 +141,7 @@ export const command: Command = {
       zahraBadges.push("<:butterfly:1475950160302571581> Doughmination Bot")
     }
 
-    if (GIRLS_BOTS.includes(targetUser.id)){
+    if (GIRLS_BOTS.includes(targetUser.id) || GIRLS_MODS.includes(targetUser.id)) {
       zahraBadges.push("<:girls:1475950689158041600> Girls Network")
     }
 
