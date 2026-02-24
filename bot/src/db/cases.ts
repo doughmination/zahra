@@ -36,6 +36,8 @@ export interface CreateCaseOptions {
   duration?: number;
 }
 
+export type PardonResult = Case | "not_found" | "wrong_guild" | "already_inactive";
+
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
 /**
@@ -121,4 +123,34 @@ export async function getCasesByUser(
     [guildId, targetId]
   );
   return result.rows;
+}
+
+/**
+ * Marks a case as inactive (pardoned).
+ * Returns the updated Case on success, or a string error code.
+ */
+export async function pardonCase(
+  caseId: string,
+  guildId: string
+): Promise<PardonResult> {
+  const id = caseId.replace(/^#/, "").toLowerCase();
+
+  // Fetch existing (use cache if available)
+  const existing = await getCaseById(id);
+
+  if (!existing) return "not_found";
+  if (existing.guild_id !== guildId) return "wrong_guild";
+  if (!existing.active) return "already_inactive";
+
+  const result = await pool.query<Case>(
+    `UPDATE cases SET active = FALSE WHERE case_id = $1 RETURNING *`,
+    [id]
+  );
+
+  const updated = result.rows[0];
+
+  // Bust the cache so subsequent lookups see the inactive state
+  await redis.setEx(`case:${id}`, CACHE_TTL, JSON.stringify(updated));
+
+  return updated;
 }

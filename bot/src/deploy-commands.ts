@@ -20,6 +20,7 @@ import { command as kickCmd }       from "./commands/kick";
 import { command as warnCmd }       from "./commands/warn";
 import { command as muteCmd }       from "./commands/mute";
 import { command as caseCmd }       from "./commands/case";
+import { command as pardonCmd }     from "./commands/pardon";
 import { command as serverinfoCmd } from "./commands/serverinfo";
 import { command as userinfoCmd }   from "./commands/userinfo";
 import { command as purgeCmd }      from "./commands/purge";
@@ -32,6 +33,7 @@ const ALL_COMMANDS = [
   warnCmd,
   muteCmd,
   caseCmd,
+  pardonCmd,
   serverinfoCmd,
   userinfoCmd,
   purgeCmd,

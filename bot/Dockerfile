@@ -1,5 +1,5 @@
-# Copyright (c) 2026 Girls Network
-# Licensed under the GN-NCSL-1.1 Licence.
+# Copyright (c) 2026 Clove Twilight
+# Licensed under the ESAL-1.3
 # See LICENCE in the project root for full licence information.
 
 # Stage 1: Build
