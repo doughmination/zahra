@@ -26,6 +26,17 @@ const BOT_DEVELOPER_IDS: string[] = [
   "1474568910736199825",
 ]
 
+const ZAHRA_ID = "1475052462410043514";
+
+/** Custom Bots I've Made */
+const BOT_IDS: string[] = [
+  "1475052462410043514", // Zahra
+  "1470035010592440393", // Robot
+  "1466359948777885799", // OnlyMeows
+  "1462829528790597684", // Shortcuts
+  "1469693643106291915", // Modding SSO
+]
+
 // ── Command ───────────────────────────────────────────────────────────────────────────────────────────
 
 export const command: Command = {
@@ -95,8 +106,16 @@ export const command: Command = {
     }
 
     if (BOT_DEVELOPER_IDS.includes(targetUser.id)) {
-      zahraBadges.push("🛠️ Zahra Developer")
+      zahraBadges.push("🛠️ Zahra Developer");
     }
+
+    if (targetUser.id == ZAHRA_ID) {
+      zahraBadges.push("<:zahra_round:1475946049347518585> Zahra");
+    }
+
+    if (BOT_IDS.includes(targetUser.id)) {
+      zahraBadges.push("<:butterfly:1475947264806752449> Doughmination Bot")
+    } 
 
     // Combine all badges
     const allBadges = [...zahraBadges, ...discordBadges];
