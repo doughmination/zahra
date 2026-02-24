@@ -113,7 +113,7 @@ export const command: Command = {
     }
 
     if (BOT_DEVELOPER_IDS.includes(targetUser.id)) {
-      zahraBadges.push(" Zahra Developer");
+      zahraBadges.push("<:round:1475949812787580999> Zahra Developer");
     }
 
     if (targetUser.id == ZAHRA_ID) {
