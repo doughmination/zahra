@@ -85,7 +85,7 @@ export const command: Command = {
       ActiveDeveloper:            "🔧 Active Developer",
       CertifiedModerator:         "🛡️ Discord Certified Moderator",
     };
-    const discordBadges = flags.map((f) => badgeMap[f] ?? f).join("\n") || "None";
+    const discordBadges = flags.map((f) => badgeMap[f] ?? f);
 
     // ── Zahra badges ────────────────────────────────────────────
     const zahraBadges: string[] = [];
