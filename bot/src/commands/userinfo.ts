@@ -109,11 +109,11 @@ export const command: Command = {
     const zahraBadges: string[] = [];
 
     if (targetUser.id === BOT_OWNER_ID) {
-      zahraBadges.push("👑 Zahra Bot Owner");
+      zahraBadges.push("<:round:1475949812787580999> Zahra Bot Owner");
     }
 
     if (BOT_DEVELOPER_IDS.includes(targetUser.id)) {
-      zahraBadges.push("🛠️ Zahra Developer");
+      zahraBadges.push(" Zahra Developer");
     }
 
     if (targetUser.id == ZAHRA_ID) {
