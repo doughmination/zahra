@@ -4,7 +4,7 @@ services:
   # ============
   zahra:
     build:
-      context: .
+      context: bot/
       dockerfile: Dockerfile
     container_name: zahra
     restart: unless-stopped
