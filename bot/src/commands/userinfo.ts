@@ -37,6 +37,13 @@ const BOT_IDS: string[] = [
   "1469693643106291915", // Modding SSO
 ]
 
+const GIRLS_BOTS: string[] = [
+  "1475380726643032064", // GayBot
+  "1449095867372933181", // BanSync
+  "1456858864551985378", // RaidGuardian
+  "1442680671880351795", // Booster Bot
+]
+
 // ── Command ───────────────────────────────────────────────────────────────────────────────────────────
 
 export const command: Command = {
@@ -110,12 +117,16 @@ export const command: Command = {
     }
 
     if (targetUser.id == ZAHRA_ID) {
-      zahraBadges.push("<:zahra_round:1475946049347518585> Zahra");
+      zahraBadges.push("<:round:1475949812787580999> Zahra");
     }
 
     if (BOT_IDS.includes(targetUser.id)) {
-      zahraBadges.push("<:butterfly:1475947264806752449> Doughmination Bot")
-    } 
+      zahraBadges.push("<:butterfly:1475950160302571581> Doughmination Bot")
+    }
+
+    if (GIRLS_BOTS.includes(targetUser.id)){
+      zahraBadges.push("<:girls:1475950689158041600> Girls Network")
+    }
 
     // Combine all badges
     const allBadges = [...zahraBadges, ...discordBadges];
