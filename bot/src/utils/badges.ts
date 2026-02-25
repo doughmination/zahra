@@ -6,7 +6,7 @@ import type { User, GuildMember } from "discord.js";
 
 // ── Custom Badges ────────────────────────────────────────────────────────────
 
-/** The bot owner's Discord ID, displayed with a crown badge */
+/** The bot owner's Discord ID */
 export const BOT_OWNER_ID = "1125844710511104030";
 
 /**
@@ -15,7 +15,6 @@ export const BOT_OWNER_ID = "1125844710511104030";
  */
 export const BOT_DEVELOPER_IDS: string[] = [
     "1125844710511104030", // Owner
-    "1474568910736199825",
 ];
 
 export const ZAHRA_ID = "1475052462410043514";

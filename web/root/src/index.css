@@ -1,0 +1,128 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap');
+
+@font-face {
+    font-family: 'Comic Code';
+    src: url('https://fonts.doughmination.win/ComicCode-Regular_2022-05-24-151938_hsmz.woff2') format('woff2'),
+        url('https://fonts.doughmination.win/ComicCode-Regular_2022-05-24-151938_hsmz.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Comic Code';
+    src: url('https://fonts.doughmination.win/ComicCode-Italic_2022-05-24-151939_rdtu.woff2') format('woff2'),
+        url('https://fonts.doughmination.win/ComicCode-Italic_2022-05-24-151939_rdtu.woff') format('woff');
+    font-weight: 400;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Comic Code';
+    src: url('https://fonts.doughmination.win/ComicCode-Medium_2022-05-24-151941_ugqm.woff2') format('woff2'),
+        url('https://fonts.doughmination.win/ComicCode-Medium_2022-05-24-151941_ugqm.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Comic Code';
+    src: url('https://fonts.doughmination.win/ComicCode-Bold_2022-05-24-152309_zqkm.woff2') format('woff2'),
+        url('https://fonts.doughmination.win/ComicCode-Bold_2022-05-24-152309_zqkm.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 228 12% 8%;
+    --foreground: 210 40% 96%;
+
+    --card: 228 14% 12%;
+    --card-foreground: 210 40% 96%;
+
+    --popover: 228 14% 12%;
+    --popover-foreground: 210 40% 96%;
+
+    --primary: 187 90% 51%;
+    --primary-foreground: 228 12% 8%;
+
+    --secondary: 228 14% 16%;
+    --secondary-foreground: 210 40% 96%;
+
+    --muted: 228 14% 16%;
+    --muted-foreground: 215 14% 55%;
+
+    --accent: 262 70% 60%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 228 14% 18%;
+    --input: 228 14% 18%;
+    --ring: 187 90% 51%;
+
+    --radius: 0.75rem;
+
+    --glow-primary: 187 90% 51%;
+    --glow-accent: 262 70% 60%;
+
+    --sidebar-background: 228 14% 10%;
+    --sidebar-foreground: 210 40% 96%;
+    --sidebar-primary: 187 90% 51%;
+    --sidebar-primary-foreground: 228 12% 8%;
+    --sidebar-accent: 228 14% 16%;
+    --sidebar-accent-foreground: 210 40% 96%;
+    --sidebar-border: 228 14% 18%;
+    --sidebar-ring: 187 90% 51%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+}
+
+@layer utilities {
+  .glow-primary {
+    box-shadow: 0 0 20px hsl(var(--glow-primary) / 0.3), 0 0 60px hsl(var(--glow-primary) / 0.1);
+  }
+
+  .glow-text {
+    text-shadow: 0 0 20px hsl(var(--glow-primary) / 0.5), 0 0 40px hsl(var(--glow-primary) / 0.2);
+  }
+
+  .glass {
+    @apply bg-card/50 backdrop-blur-xl border border-border/50;
+  }
+
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent;
+  }
+
+  .gradient-border {
+    position: relative;
+  }
+
+  .gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+}
