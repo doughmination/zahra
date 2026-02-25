@@ -15,7 +15,7 @@ const Navbar = () => {
     >
       <div className="container mx-auto flex items-center justify-between h-16 px-4">
         <a href="#" className="flex items-center gap-3">
-          <img src="/logo.png" alt="Zahra" className="h-8" />
+          <img src="/favicon.png" alt="Zahra" className="h-8" />
         </a>
 
         <div className="hidden md:flex items-center gap-8 text-sm text-muted-foreground">
