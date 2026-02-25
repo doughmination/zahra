@@ -17,3 +17,21 @@ updates:
       timezone: "Europe/London"
     assignees:
       - "doughmination"
+
+  # - package-ecosystem: "npm"
+  #   directory: "/web/dash/frontend"
+  #   schedule:
+  #     interval: "daily"
+  #     time: "09:00"
+  #     timezone: "Europe/London"
+  #   assignees:
+  #     - "doughmination"
+
+  # - package-ecosystem: "npm"
+  #   directory: "/web/dash/backend"
+  #   schedule:
+  #     interval: "daily"
+  #     time: "09:00"
+  #     timezone: "Europe/London"
+  #   assignees:
+  #     - "doughmination"
