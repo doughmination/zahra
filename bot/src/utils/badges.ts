@@ -35,6 +35,8 @@ export const discordBadgeMap: Record<string, string> = {
   PremiumEarlySupporter: "<:earlyNitro:1475970814066163894> Early Nitro User",
   VerifiedDeveloper:     "<:verified:1475971385770905767> Verified Early Bot Developer",
   CertifiedModerator:    "<:moderator:1475971723521425428> Discord Moderator Program Alumni",
+  QuestCompleted:        "<:quest:1476544779297755247> Completed a Quest",
+  OrbsApprentice:        "<:orbs:1476544780505845915> Discord Orbs Apprentice"
 };
 
 const PLATFORM_LABEL: Record<string, string> = {
