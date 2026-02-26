@@ -7,6 +7,8 @@ services:
       context: bot/
       dockerfile: Dockerfile
     container_name: zahra
+    ports:
+      - "127.0.0.1:4000:4000"
     restart: unless-stopped
     environment:
       - NODE_ENV=production
