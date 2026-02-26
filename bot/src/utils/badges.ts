@@ -66,7 +66,7 @@ export async function resolveBadges(user: User, member?: GuildMember | null): Pr
     zahraBadges.push("<:round:1475949812787580999> Zahra");
   }
 
-  console.log("FLAGS:", user.flags?.toArray());
+  console.log(await user.fetchFlags());
 
   if (BOT_IDS.includes(user.id)) {
     zahraBadges.push("<:butterfly:1475950160302571581> Doughmination Bot");
