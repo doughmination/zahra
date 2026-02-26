@@ -5,17 +5,18 @@
 import { Pool } from "pg";
 import { createClient } from "redis";
 import chalk from "chalk";
+import { migrateUsers } from "./users";
 
-// ── PostgreSQL ──────────────────────────────────────────────────────────────
+// ── PostgreSQL ────────────────────────────────────────────────────────────────
 
 export const pool = new Pool({
-  host: process.env.POSTGRES_HOST ?? "bot_postgres",
-  port: Number(process.env.POSTGRES_PORT ?? 5432),
-  user: process.env.POSTGRES_USER,
-  password: process.env.POSTGRES_PASSWORD,
-  database: process.env.POSTGRES_DB,
-  max: 10,
-  idleTimeoutMillis: 30_000,
+  host:                    process.env.POSTGRES_HOST      ?? "bot_postgres",
+  port:                    Number(process.env.POSTGRES_PORT ?? 5432),
+  user:                    process.env.POSTGRES_USER,
+  password:                process.env.POSTGRES_PASSWORD,
+  database:                process.env.POSTGRES_DB,
+  max:                     10,
+  idleTimeoutMillis:       30_000,
   connectionTimeoutMillis: 5_000,
 });
 
@@ -23,7 +24,7 @@ pool.on("error", (err) => {
   console.error(chalk.red("💾 PostgreSQL pool error:"), err);
 });
 
-// ── Redis ───────────────────────────────────────────────────────────────────
+// ── Redis ─────────────────────────────────────────────────────────────────────
 
 export const redis = createClient({
   socket: {
@@ -37,16 +38,15 @@ redis.on("error", (err) => {
   console.error(chalk.red("📦 Redis client error:"), err);
 });
 
-// ── Init ────────────────────────────────────────────────────────────────────
+// ── Initialise & migrate ──────────────────────────────────────────────────────
 
 export async function initDb(): Promise<void> {
-  // Connect Redis
   await redis.connect();
   console.log(chalk.greenBright("✔ Redis connected"));
 
-  // Run migrations
   const client = await pool.connect();
   try {
+    // Moderation cases table
     await client.query(`
       CREATE TABLE IF NOT EXISTS cases (
         id            SERIAL PRIMARY KEY,
@@ -63,12 +63,13 @@ export async function initDb(): Promise<void> {
         active        BOOLEAN      NOT NULL DEFAULT TRUE
       );
 
-      CREATE INDEX IF NOT EXISTS idx_cases_guild_target
-        ON cases (guild_id, target_id);
-
-      CREATE INDEX IF NOT EXISTS idx_cases_case_id
-        ON cases (case_id);
+      CREATE INDEX IF NOT EXISTS idx_cases_guild_target ON cases (guild_id, target_id);
+      CREATE INDEX IF NOT EXISTS idx_cases_case_id      ON cases (case_id);
     `);
+
+    // Users + donor_links tables
+    await migrateUsers(client);
+
     console.log(chalk.greenBright("✔ Database migrations complete"));
   } finally {
     client.release();

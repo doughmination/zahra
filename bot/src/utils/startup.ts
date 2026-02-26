@@ -11,9 +11,10 @@ import {
 } from "discord.js";
 import chalk from "chalk";
 import { initDb } from "../db/client";
+import { startOAuthServer } from "../oauth/server";
 import type { Command } from "./types";
 
-// ── Import commands ──────────────────────────────────────────────────────────
+// ── Command imports ───────────────────────────────────────────────────────────
 import { command as banCmd }        from "../commands/ban";
 import { command as kickCmd }       from "../commands/kick";
 import { command as warnCmd }       from "../commands/warn";
@@ -25,22 +26,14 @@ import { command as userinfoCmd }   from "../commands/userinfo";
 import { command as purgeCmd }      from "../commands/purge";
 import { command as dashCmd }       from "../commands/dash";
 import { command as supportCmd }    from "../commands/support";
+import { command as linkCmd }       from "../commands/link";
+import { command as adminCmd }      from "../commands/admin";
 
 const ALL_COMMANDS: Command[] = [
-  banCmd,
-  kickCmd,
-  warnCmd,
-  muteCmd,
-  caseCmd,
-  pardonCmd,
-  serverinfoCmd,
-  userinfoCmd,
-  purgeCmd,
-  dashCmd,
-  supportCmd,
+  banCmd, kickCmd, warnCmd, muteCmd, caseCmd, pardonCmd,
+  serverinfoCmd, userinfoCmd, purgeCmd, dashCmd, supportCmd,
+  linkCmd, adminCmd,
 ];
-
-// ── Helpers ──────────────────────────────────────────────────────────────────
 
 const token = process.env.BOT_TOKEN;
 
@@ -48,50 +41,28 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-// ── Main ─────────────────────────────────────────────────────────────────────
-
-export default async function startup() {
+export default async function startup(): Promise<void> {
   if (!token) {
     console.error(chalk.red("❌ BOT_TOKEN missing in .env"));
     process.exit(1);
   }
 
-  console.log(
-    chalk.bgBlack.greenBright.bold(`
+  console.log(chalk.bgBlack.greenBright.bold(`
 ╔════════════════════════════════════════════════════════════╗
 ║ Zahra - Feature Rich Discord Bot - Open Source and Free    ║
 ║ Forever                                                    ║
 ╚════════════════════════════════════════════════════════════╝
-`)
-  );
+`));
 
-  // Boot animation
-  const bootStates = ["Booting.", "Booting..", "Booting...", "Booting...."];
-  let bootIndex = 0;
-  const isTTY = !!process.stdout.isTTY;
-  const bootAnimation = setInterval(() => {
-    if (isTTY) {
-      process.stdout.clearLine(0);
-      process.stdout.cursorTo(0);
-      process.stdout.write(chalk.bgBlack.greenBright(`🚀 ${bootStates[bootIndex]}`));
-    }
-    bootIndex = (bootIndex + 1) % bootStates.length;
-  }, 400);
-
-  // Init database
   try {
     await initDb();
   } catch (err) {
-    clearInterval(bootAnimation);
     console.error(chalk.red("❌ Database initialisation failed:"), err);
     process.exit(1);
   }
 
-  // Build command map
   const commands = new Collection<string, Command>();
-  for (const cmd of ALL_COMMANDS) {
-    commands.set(cmd.data.name, cmd);
-  }
+  for (const cmd of ALL_COMMANDS) commands.set(cmd.data.name, cmd);
 
   const client = new Client({
     intents: [
@@ -101,17 +72,8 @@ export default async function startup() {
     ],
   });
 
-  // ── Ready ──────────────────────────────────────────────────────────────────
   client.once(Events.ClientReady, async () => {
-    clearInterval(bootAnimation);
-    if (isTTY) {
-      process.stdout.clearLine(0);
-      process.stdout.cursorTo(0);
-    }
-
-    const user = client.user;
-    if (!user) return;
-
+    const user       = client.user!;
     const guildCount = client.guilds.cache.size;
 
     await user.setPresence({
@@ -119,26 +81,23 @@ export default async function startup() {
       status: "online",
     });
 
-    console.log(
-      chalk.bgBlack.greenBright.bold(`✔ Logged in as ${user.tag} (${user.id})`)
-    );
-    console.log(
-      chalk.greenBright(`✔ Loaded ${commands.size} command(s): ${[...commands.keys()].join(", ")}`)
-    );
+    console.log(chalk.greenBright.bold(`✔ Logged in as ${user.tag} (${user.id})`));
+    console.log(chalk.greenBright(`✔ ${commands.size} command(s) loaded: ${[...commands.keys()].join(", ")}`));
+
+    // Start the OAuth HTTP server now that the Discord client is ready
+    // (it needs the client to assign roles and edit interactions)
+    startOAuthServer(client);
   });
 
-  // ── Interaction handler ────────────────────────────────────────────────────
   client.on(Events.InteractionCreate, async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
-
     const cmd = commands.get(interaction.commandName);
     if (!cmd) return;
 
     try {
       await cmd.execute(interaction as ChatInputCommandInteraction, client);
     } catch (err) {
-      console.error(chalk.red(`❌ Error in /${interaction.commandName}:`), err);
-
+      console.error(chalk.red(`❌ /${interaction.commandName}:`), err);
       const msg = "❌ An unexpected error occurred. Please try again later.";
       if (interaction.deferred || interaction.replied) {
         await interaction.editReply(msg).catch(() => void 0);
@@ -148,25 +107,19 @@ export default async function startup() {
     }
   });
 
-  // ── Shutdown ───────────────────────────────────────────────────────────────
-  async function shutdown() {
-    console.log(chalk.yellow("🛑 Shutting down..."));
+  process.on("SIGINT",  () => shutdown(client));
+  process.on("SIGTERM", () => shutdown(client));
 
-    if (client.user) {
-      await client.user.setPresence({
-        activities: [{ name: "🛑 Shutting down, please wait", type: 4 }],
-        status: "dnd",
-      });
-    }
-
-    await sleep(5_000);
-    process.exit(0);
-  }
-
-  process.on("SIGINT", shutdown);
-  process.on("SIGTERM", shutdown);
-
-  console.log(chalk.greenBright("⏳ Booting in 10 seconds..."));
+  console.log(chalk.greenBright("⏳ Starting in 10 seconds..."));
   await sleep(10_000);
   await client.login(token);
+}
+
+async function shutdown(client: Client): Promise<void> {
+  console.log(chalk.yellow("🛑 Shutting down..."));
+  try {
+    await client.user?.setPresence({ status: "invisible" });
+  } catch { /* best-effort */ }
+  await sleep(2_000);
+  process.exit(0);
 }
