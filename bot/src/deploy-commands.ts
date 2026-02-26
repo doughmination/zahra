@@ -26,6 +26,8 @@ import { command as userinfoCmd }   from "./commands/userinfo";
 import { command as purgeCmd }      from "./commands/purge";
 import { command as dashCmd }       from "./commands/dash";
 import { command as supportCmd }    from "./commands/support";
+import { command as linkCmd }  from "./commands/link";
+import { command as adminCmd } from "./commands/admin";
 
 const ALL_COMMANDS = [
   banCmd,
@@ -39,6 +41,8 @@ const ALL_COMMANDS = [
   purgeCmd,
   dashCmd,
   supportCmd,
+  linkCmd,
+  adminCmd,
 ];
 
 const token    = process.env.BOT_TOKEN;
