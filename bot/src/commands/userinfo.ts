@@ -52,6 +52,11 @@ export const command: Command = {
           .join(" ") + (roles.size > 20 ? ` … (+${roles.size - 20} more)` : "")
       : "None";
 
+    const primaryGuild = targetUser.primaryGuild;
+    const guildTagDisplay = targetUser.primaryGuild?.identityEnabled
+  ? `🏷️ ${targetUser.primaryGuild.tag}`
+  : "None";
+
     const badges = await resolveBadges(targetUser, member);
 
     const embed = new EmbedBuilder()
@@ -61,14 +66,15 @@ export const command: Command = {
       .addFields(
         { name: "User ID",          value: targetUser.id,                            inline: true  },
         { name: "Bot?",             value: targetUser.bot ? "Yes" : "No",            inline: true  },
+        { name: "Guild Tag",        value: guildTagDisplay,                          inline: true },
         { name: "\u200B",           value: "\u200B",                                 inline: true  },
         { name: "Account Created",  value: `<t:${accountCreatedTs}:F>`,              inline: true  },
-        { name: "Joined Server",    value: joinedTs ? `<t:${joinedTs}:F>` : "N/A",  inline: true  },
+        { name: "Joined Server",    value: joinedTs ? `<t:${joinedTs}:F>` : "N/A",   inline: true  },
         { name: "\u200B",           value: "\u200B",                                 inline: true  },
         { name: "Nickname",         value: member?.nickname ?? "None",               inline: true  },
         { name: "Highest Role",     value: roles && roles.size > 0 ? `<@&${roles.first()!.id}>` : "None", inline: true },
         { name: "\u200B",           value: "\u200B",                                 inline: true  },
-        { name: `Roles (${roles?.size ?? 0})`, value: roleDisplay,                  inline: false },
+        { name: `Roles (${roles?.size ?? 0})`, value: roleDisplay,                   inline: false },
         { name: "Badges",           value: badges,                                   inline: false },
       )
       .setFooter({ text: `User ID: ${targetUser.id}` })
