@@ -52,7 +52,7 @@ export const command: Command = {
           .join(" ") + (roles.size > 20 ? ` … (+${roles.size - 20} more)` : "")
       : "None";
 
-    const badges = resolveBadges(targetUser, member);
+    const badges = await resolveBadges(targetUser, member);
 
     const embed = new EmbedBuilder()
       .setColor(member?.displayHexColor !== "#000000" ? member?.displayHexColor ?? 0x5865f2 : 0x5865f2)
