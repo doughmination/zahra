@@ -19,10 +19,8 @@ services:
       - ./bot/.env.keys:/app/.env.keys:ro
     networks:
       - bot-network
+      - infra
     user: "1001:1001"
-    depends_on:
-      - postgres
-      - redis
 
   web-root:
     build:
@@ -51,30 +49,6 @@ services:
 #    container_name: dash-back
 #    restart: unless-stopped
 
-  postgres:
-    image: postgres:16
-    container_name: bot_postgres
-    restart: always
-    env_file:
-      - .env_db
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    networks:
-      - bot-network
-
-  redis:
-    image: redis:7
-    container_name: bot_redis
-    restart: always
-    env_file:
-      - .env_db
-    # Read password from env var — avoids shell substitution issues with env_file
-    entrypoint: [ "/bin/sh", "-c", "redis-server --requirepass \"$$REDIS_PASSWORD\"" ]
-    volumes:
-      - redisdata:/data
-    networks:
-      - bot-network
-
 volumes:
   pgdata:
   redisdata:
@@ -83,3 +57,5 @@ volumes:
 networks:
   bot-network:
     driver: bridge
+  infra:
+    external: true
